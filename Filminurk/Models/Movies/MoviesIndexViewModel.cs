@@ -5,7 +5,7 @@
         public Guid ID { get; set; }
         public string Title { get; set; }
         public DateOnly FirstPublished { get; set; }
-        public decimal CurrentRating { get; set; }
+        public double CurrentRating { get; set; }
         //public List<UserComment>? Reviews { get; set; }
 
         /*2 omal valikul andmetüüpi yo*/
