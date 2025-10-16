@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Filminurk.ApplicationServices\Filminurk.ApplicationServices.csproj" />
     <ProjectReference Include="..\Filminurk.Data\Filminurk.Data.csproj" />
   </ItemGroup>
 
