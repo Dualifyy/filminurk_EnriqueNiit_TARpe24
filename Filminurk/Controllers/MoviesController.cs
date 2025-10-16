@@ -3,6 +3,7 @@ using Filminurk.Data;
 using Filminurk.Models.Movies;
 using Filminurk.Core.Dto;
 using Filminurk.Core.ServiceInterface;
+using Microsoft.EntityFrameworkCore;
 
 namespace Filminurk.Controllers
 {
@@ -59,5 +60,40 @@ namespace Filminurk.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var movie = await _movieServices.DetailsAsync(id);
+            if(movie == null)
+            {
+                return NotFound();
+            }
+            var vm = new MoviesDeleteViewModel();
+            vm.ID = movie.ID;
+            vm.Title = movie.Title;
+            vm.Description = movie.Description;
+            vm.FirstPublished = movie.FirstPublished;
+            vm.CurrentRating = movie.CurrentRating;
+            vm.UserRating = movie.UserRating;
+            vm.MovieLength = movie.MovieLength;
+            vm.BuyPrice = movie.BuyPrice;
+            vm.Actor = movie.Actor;
+            vm.Director = movie.Director;
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmation(Guid id)
+        {
+            var movie = await _movieServices.Delete(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(Index));        }
+
+        
     }
 }
