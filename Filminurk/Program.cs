@@ -1,3 +1,5 @@
+using Filminurk.ApplicationServices.Services;
+using Filminurk.Core.ServiceInterface;
 using Filminurk.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<FilminurkTARpe24Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString
     ("DefaultConnection")));
+builder.Services.AddScoped<IMovieServices MovieServices>
 
 var app = builder.Build();
 

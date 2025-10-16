@@ -1,5 +1,71 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model Filminurk.Models.Movies.MoviesDeleteViewModel
+
+<h1>Kustuta film</h1>
+
+<div>
+	<h4>Film</h4>
+	<hr />
+
+	<dl class="row">
+		<div class="form-group-row">
+			<label asp-for="ID" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(Model => Model.ID)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group-row">
+			<label asp-for="Title" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(Model => Model.Title)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group-row">
+			<label asp-for="Description" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(Model => Model.Description)
+		</div>
+	</dl>
+
+	<dl class="row">
+		<div class="form-group-row">
+			<label asp-for="FirstPublished" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(Model => Model.FirstPublished)
+		</div>
+	</dl>
+	<dl class="row">
+		<div class="form-group-row">
+			<label asp-for="Director" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(Model => Model.Director)
+		</div>
+	</dl>
+	<dl class="row">
+		<div class="form-group-row">
+			<label asp-for="CurrentRating" class="col-sm-2 col-form-label"></label>
+			@Html.DisplayFor(Model => Model.CurrentRating)
+		</div>
+
+		<dl class="row">
+			<div class="form-group-row">
+				<label asp-for="UserRating" class="col-sm-2 col-form-label"></label>
+				@Html.DisplayFor(Model => Model.UserRating)
+			</div>
+		</dl>
+
+		<dl class="row">
+			<div class="form-group-row">
+				<label asp-for="BuyPrice" class="col-sm-2 col-form-label"></label>
+				@Html.DisplayFor(Model => Model.BuyPrice)
+			</div>
+		</dl>
+
+		<dl class="row">
+			<div class="form-group-row">
+				<label asp-for="MovieLength" class="col-sm-2 col-form-label"></label>
+				@Html.DisplayFor(Model => Model.MovieLength)
+			</div>
+		</dl>
+
+	
+	</dl>
+</div>
