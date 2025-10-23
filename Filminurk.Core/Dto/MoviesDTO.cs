@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Filminurk.Core.Dto
 {
@@ -16,6 +17,9 @@ namespace Filminurk.Core.Dto
         public List<string>? Actor { get; set; }
         public double? CurrentRating { get; set; }
         //public List<UserComment>? Reviews { get; set; }
+
+        public List<IFormFile> Files { get; set; }
+        public IEnumerable<FileToAPIDTO> FileToAPIDTOs { get; set; } = new List<FileToAPIDTO>();
 
         /*kolm omal valikul andmetüüpi yo*/
 

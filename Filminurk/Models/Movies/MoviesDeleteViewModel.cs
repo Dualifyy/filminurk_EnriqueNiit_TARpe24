@@ -11,6 +11,8 @@
         public double? CurrentRating { get; set; }
         //public List<UserComment>? Reviews { get; set; }
 
+        public List<ImageViewModel> Images { get; set; } = new List<ImageViewModel>();
+
         /*kolm omal valikul andmetüüpi yo*/
 
         public double? UserRating { get; set; }

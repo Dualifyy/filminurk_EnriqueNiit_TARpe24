@@ -1,5 +1,14 @@
-﻿@model Filminurk.Models.Movies.MoviesCreateViewModel
+﻿@model Filminurk.Models.Movies.MoviesCreateUpdateViewModel
 
+
+@**if(Model.ID.HasValue)
+{
+	<h1>Muuda Film</h1>
+}
+else
+{
+	<h1>Lisa film</h1>
+}**@
 <h1>Lisa Film</h1>
 <div>
 	<form method="post" enctype="multipart/form-data">
