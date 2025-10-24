@@ -146,6 +146,13 @@ namespace Filminurk.Controllers
                 {
                     return NotFound();
                 }
+            var images = await _context.FilesToAPI
+            .Where(x => x.MovieID == id)
+            .Select(y => new ImageViewModel
+            {
+                FilePath = y.ExistingFilePath,
+                ImageID = y.ImageID,
+            }).ToArrayAsync();
                 var vm = new MoviesDeleteViewModel();
                 vm.ID = movie.ID;
                 vm.Title = movie.Title;
@@ -157,6 +164,7 @@ namespace Filminurk.Controllers
                 vm.BuyPrice = movie.BuyPrice;
                 vm.Actor = movie.Actor;
                 vm.Director = movie.Director;
+            vm.Images.AddRange(images);
 
                 return View(vm);
         }
