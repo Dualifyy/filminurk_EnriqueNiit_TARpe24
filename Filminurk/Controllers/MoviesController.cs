@@ -41,11 +41,13 @@ namespace Filminurk.Controllers
         public IActionResult Create()
         {
             MoviesCreateUpdateViewModel result = new();
-            return View("Create", result);
+            return View("CreateUpdate", result);
         }
-        [HttpPost, ActionName("Create")]
+        [HttpPost]
         public async Task<IActionResult> Create(MoviesCreateUpdateViewModel vm)
         {
+            if (ModelState.IsValid)
+            { 
             var dto = new MoviesDTO()
             {
                 ID = vm.ID,
@@ -75,6 +77,8 @@ namespace Filminurk.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+            return RedirectToAction(nameof(Index));
+        }
             return RedirectToAction(nameof(Index));
         }
         [HttpGet]

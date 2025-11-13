@@ -1,4 +1,5 @@
-﻿using Filminurk.Core.Domain;
+﻿using Filminurk.Core;
+using Filminurk.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ namespace Filminurk.Data
         public FilminurkTARpe24Context(DbContextOptions<FilminurkTARpe24Context> options) : base(options) { }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<FileToAPI> FilesToAPI { get; set; }
+        public DbSet<UserComment> UserComments { get; set; }
     }
 }
