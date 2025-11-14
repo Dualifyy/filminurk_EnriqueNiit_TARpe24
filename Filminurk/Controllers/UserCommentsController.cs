@@ -26,9 +26,8 @@ namespace Filminurk.Controllers
                 {
                     CommentID = c.CommentID,
                     CommentBody = c.CommentBody,
-
+                    IsHarmful = (int)c.IsHarmful,
                     CommentCreatedAt = c.CommentCreatedAt,
-                    CommentDeletedAt = c.CommentDeletedAt,
 
 
                 });

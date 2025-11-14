@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Models\Actors\" />
+    <Folder Include="wwwroot\lib\defaultassets\" />
   </ItemGroup>
 
 </Project>
