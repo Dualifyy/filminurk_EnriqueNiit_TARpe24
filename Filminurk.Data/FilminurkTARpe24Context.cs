@@ -1,5 +1,5 @@
-﻿using Filminurk.Core;
-using Filminurk.Core.Domain;
+﻿using Filminurk.Core.Domain;
+using Filminurk.Core.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,5 +17,6 @@ namespace Filminurk.Data
         public DbSet<UserComment> UserComments { get; set; }
         public DbSet<FavouriteList> FavouriteLists { get; set; }
         public DbSet<FileToDatabase> FilesToDatabase { get; set; }
+        public DbSet<Actor> Actors { get; set; }
     }
 }

@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Filminurk.Core
+namespace Filminurk.Core.Dto
 {
-    public class UserComment
+    public class UserCommentDTO
     {
         [Key]
-        public Guid CommentID { get; set; }
+        public Guid? CommentID { get; set; }
         public string? CommenterUserID { get; set; }
         public string CommentBody { get; set; }
         public int CommentedScore { get; set; }
