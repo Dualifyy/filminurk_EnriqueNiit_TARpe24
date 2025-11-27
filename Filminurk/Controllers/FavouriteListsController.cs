@@ -27,9 +27,9 @@ namespace Filminurk.Controllers
                     ListCreatedAt = x.ListCreatedAt,
                     Image = (List<FavouriteListsIndexImageViewModel>)_context.FilesToDatabase
                     .Where(ml => ml.ListID == x.FavouriteListID)
-                    .Select(li => new FavouriteListsIndexImageViewModel
+                    .Select(li => new FavouriteListsIndexImageViewModel()
                     {
-                        ListID = li.ListID,
+                        ListID = (Guid)li.ListID,
                         ImageID = li.ImageID,
                         ImageData = li.ImageData,
                         ImageTitle = li.ImageTitle,

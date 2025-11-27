@@ -12,6 +12,6 @@ namespace Filminurk.Core.Dto
         public string ImageTitle { get; set; }
         public byte[] ImageData { get; set; }
         public string Image { get; set; }
-        public Guid ListID { get; set; }
+        public Guid? ListID { get; set; }
     }
 }

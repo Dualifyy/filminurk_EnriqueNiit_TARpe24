@@ -12,7 +12,9 @@ namespace Filminurk.Models.Actors
         public List<string>? MoviesActedFor { get; set; } = new List<string>();
 
         // public Guid PortraitID { get; set; }
-
+        public string MostPopularMovie { get; set; }
+        public int Age { get; set; }
+        public string Nationality { get; set; }
         // andmebaasi jaoks
         public DateTime? EntryCreatedAt { get; set; }
         public DateTime? EntryModifiedAt { get; set; }

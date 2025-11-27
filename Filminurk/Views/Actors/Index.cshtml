@@ -16,23 +16,26 @@
 					<th scope="col">#</th>
 					<th scope="col">Eesnimi</th>
 					<th scope="col">Perekonnanimi</th>
-					<th scope="col">Lemmikžanr</th>
-					<th scope="col">Auhinnad</th>
-					<th scope="col">Ameeriklane</th>
+					<th scope="col">Kõige populaarsem film</th>
+					<th scope="col">Vanus</th>
+					<th scope="col">Rahvus</th>
 					<th scope="col">Tööriistad</th>
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var actor in Model)
+				@foreach (var actors in Model)
 				{
 					<tr>
 						<td>@rowNumber</td>
-						<td>@actor.FirstName</td>
-						<td>@actor.LastName</td>
+						<td>@actors.FirstName</td>
+						<td>@actors.LastName</td>
+						<td>@actors.MostPopularMovie</td>
+						<td>@actors.Age</td>
+						<td>@actors.Nationality</td>
 						<td>
-							<a asp-action="Delete" asp-controller="Actors" asp-route-id="@actor.ActorID" class="btn btn-danger">Kustuta</a>
-							<a asp-action="Update" asp-controller="Actors" asp-route-id="@actor.ActorID" class="btn btn-primary">Muuda</a>
-							<a asp-action="Details" asp-controller="Actors" asp-route-id="@actor.ActorID" class="btn btn-primary">Info</a>
+							<a asp-action="Delete" asp-controller="Actors" asp-route-id="@actors.ActorID" class="btn btn-danger">Kustuta</a>
+							<a asp-action="Update" asp-controller="Actors" asp-route-id="@actors.ActorID" class="btn btn-primary">Muuda</a>
+							<a asp-action="Details" asp-controller="Actors" asp-route-id="@actors.ActorID" class="btn btn-primary">Info</a>
 						</td>
 					</tr>
 					rowNumber++;

@@ -30,7 +30,7 @@ namespace Filminurk.ApplicationServices.Services
             movie.Description = dto.Description;
             movie.CurrentRating = (double)dto.CurrentRating;
             movie.FirstPublished = (DateOnly)dto.FirstPublished;
-            movie.Actor = dto.Actor;
+            movie.Actors = dto.Actors;
             movie.Director = dto.Director;
             movie.UserRating = (double)dto.UserRating;
             movie.BuyPrice = dto.BuyPrice;
@@ -82,7 +82,7 @@ namespace Filminurk.ApplicationServices.Services
             movie.CurrentRating = (double)dto.CurrentRating;
             movie.UserRating = (double)dto.UserRating;
             movie.FirstPublished = (DateOnly)dto.FirstPublished;
-            movie.Actor = dto.Actor;
+            movie.Actors = dto.Actors;
             movie.Director = dto.Director;
             movie.BuyPrice = dto.BuyPrice;
             movie.MovieLength = (int)dto.MovieLength;

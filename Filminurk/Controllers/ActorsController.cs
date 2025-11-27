@@ -4,7 +4,7 @@ using Filminurk.Core.Dto;
 using Filminurk.Core.ServiceInterface;
 using Filminurk.Data;
 using Filminurk.Models.Actors;
-// using Filminurk.Models.Movies;
+using Filminurk.Models.Movies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -68,6 +68,9 @@ namespace Filminurk.Controllers
                     LastName = vm.LastName,
                     NickName = vm.NickName,
                     MoviesActedFor = vm.MoviesActedFor,
+                    MostPopularMovie = vm.MostPopularMovie,
+                    Age = vm.Age,
+                    Nationality = vm.Nationality,
                     EntryCreatedAt = vm.EntryCreatedAt,
                     EntryModifiedAt = vm.EntryModifiedAt
                 };
@@ -98,6 +101,9 @@ namespace Filminurk.Controllers
             vm.LastName = actor.LastName;
             vm.NickName = actor.NickName;
             vm.MoviesActedFor = actor.MoviesActedFor;
+            vm.MostPopularMovie = actor.MostPopularMovie;
+            vm.Age = actor.Age;
+            vm.Nationality = actor.Nationality;
             vm.EntryCreatedAt = actor.EntryCreatedAt;
             vm.EntryModifiedAt = actor.EntryModifiedAt;
             ViewBag.ActorID = actor.ActorID;
@@ -138,6 +144,9 @@ namespace Filminurk.Controllers
             vm.LastName = actor.LastName;
             vm.NickName = actor.NickName;
             vm.MoviesActedFor = actor.MoviesActedFor;
+            vm.MostPopularMovie = actor.MostPopularMovie;
+            vm.Age = actor.Age;
+            vm.Nationality = actor.Nationality;
             vm.EntryCreatedAt = actor.EntryCreatedAt;
             vm.EntryModifiedAt = actor.EntryModifiedAt;
 
@@ -154,6 +163,9 @@ namespace Filminurk.Controllers
                 LastName = vm.LastName,
                 NickName = vm.NickName,
                 MoviesActedFor = vm.MoviesActedFor,
+                MostPopularMovie = vm.MostPopularMovie,
+                Age = vm.Age,
+                Nationality = vm.Nationality,
                 EntryCreatedAt = vm.EntryCreatedAt,
                 EntryModifiedAt = vm.EntryModifiedAt
             };
@@ -184,6 +196,9 @@ namespace Filminurk.Controllers
             vm.LastName = actor.LastName;
             vm.NickName = actor.NickName;
             vm.MoviesActedFor = actor.MoviesActedFor;
+            vm.MostPopularMovie = actor.MostPopularMovie;
+            vm.Age = actor.Age;
+            vm.Nationality = actor.Nationality;
             vm.EntryCreatedAt = actor.EntryCreatedAt;
             vm.EntryModifiedAt = actor.EntryModifiedAt;
 

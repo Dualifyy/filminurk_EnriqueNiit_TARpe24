@@ -55,7 +55,7 @@ namespace Filminurk.Controllers
                 Description = vm.Description,
                 FirstPublished = vm.FirstPublished,
                 Director = vm.Director,
-                Actor = vm.Actor,
+                Actors = vm.Actors,
                 CurrentRating = vm.CurrentRating,
                 UserRating = vm.UserRating,
                 BuyPrice = vm.BuyPrice,
@@ -75,7 +75,7 @@ namespace Filminurk.Controllers
             var result = await _movieServices.Create(dto);
             if (result == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
             return RedirectToAction(nameof(Index));
         }
@@ -84,6 +84,10 @@ namespace Filminurk.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             var movie = await _movieServices.DetailsAsync(id);
 
             if(movie == null)
@@ -107,7 +111,7 @@ namespace Filminurk.Controllers
             vm.UserRating = movie.UserRating;
             vm.MovieLength = movie.MovieLength;
             vm.BuyPrice = movie.BuyPrice;
-            vm.Actor = movie.Actor;
+            vm.Actors = movie.Actors;
             vm.Director = movie.Director;
             vm.Images.AddRange(images);
 
@@ -123,13 +127,22 @@ namespace Filminurk.Controllers
                 Description = vm.Description,
                 FirstPublished = vm.FirstPublished,
                 Director = vm.Director,
-                Actor = vm.Actor,
+                Actors = vm.Actors,
                 CurrentRating = vm.CurrentRating,
                 UserRating = vm.UserRating,
                 BuyPrice = vm.BuyPrice,
                 MovieLength = vm.MovieLength,
                 EntryCreatedAt = vm.EntryCreatedAt,
                 EntryModifiedAt = vm.EntryModifiedAt,
+                Files = vm.Files,
+                FileToAPIDTOs = vm.Images
+
+                .Select(x => new FileToAPIDTO
+                {
+                    MovieID = x.MovieID,
+                    ImageID = x.ImageID,
+                    FilePath = x.FilePath,
+                }).ToArray()
 
             };
             var result = await _movieServices.Update(dto);
@@ -166,7 +179,7 @@ namespace Filminurk.Controllers
                 vm.UserRating = movie.UserRating;
                 vm.MovieLength = movie.MovieLength;
                 vm.BuyPrice = movie.BuyPrice;
-                vm.Actor = movie.Actor;
+                vm.Actors = movie.Actors;
                 vm.Director = movie.Director;
             vm.Images.AddRange(images);
 
@@ -186,6 +199,48 @@ namespace Filminurk.Controllers
                 return RedirectToAction(nameof(Index)); 
             }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var movie = await _movieServices.DetailsAsync(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            ImageViewModel[] images = await FileFromDatabase(id);
+
+            var vm = new MoviesDetailsViewModel();
+
+
+            vm.ID = movie.ID;
+            vm.Title = movie.Title;
+            vm.Description = movie.Description;
+            vm.FirstPublished = movie.FirstPublished;
+            vm.CurrentRating = movie.CurrentRating;
+            vm.UserRating = movie.UserRating;
+            vm.MovieLength = movie.MovieLength;
+            vm.BuyPrice = movie.BuyPrice;
+            vm.Actors = movie.Actors;
+            vm.Director = movie.Director;
+            vm.Images.AddRange(images);
+
+            return View(vm);
 
         }
+
+        private async Task<ImageViewModel[]> FileFromDatabase(Guid id)
+        {
+            return await _context.FilesToAPI
+                .Where(x => x.MovieID == id)
+                .Select(y => new ImageViewModel
+                {
+                    ImageID = y.ImageID,
+                    MovieID = y.MovieID,
+                    IsPoster = y.IsPoster,
+                    FilePath = y.ExistingFilePath,
+                }
+                ).ToArrayAsync();
+        }
+
     }
+}

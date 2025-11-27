@@ -7,8 +7,8 @@
         public string Description { get; set; }
         public DateOnly FirstPublished { get; set; }
         public string Director { get; set; }
-        public List<string>? Actor { get; set; }
-        public double CurrentRating { get; set; }
+        public List<string>? Actors { get; set; }
+        public double? CurrentRating { get; set; }
         //public List<UserComment>? Reviews { get; set; }
 
         /* Kaasasolevate piltide andmeomadused*/

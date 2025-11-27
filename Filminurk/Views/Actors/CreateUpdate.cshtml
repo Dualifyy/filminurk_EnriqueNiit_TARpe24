@@ -42,10 +42,35 @@ else
 			<label asp-for="MoviesActedFor" class="col-sm-2 col-form-label"></label>
 			<div class="col-sm-10">
 
-				<select asp-for="MoviesActedFor" class="form-control" asp-items="ViewBag.MovieTitle" multiple>
+				<select asp-for="MoviesActedFor" class="form-control" />
 				</select>
 			</div>
 		</div>
+		<div class="form-group row">
+			<label asp-for="MostPopularMovie" class="col-sm-2 col-form-label"></label>
+			<div class="col-sm-10">
+
+				<select asp-for="MostPopularMovie" class="form-control" />
+				</select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label asp-for="Age" class="col-sm-2 col-form-label"></label>
+			<div class="col-sm-10">
+
+				<select asp-for="Age" class="form-control" />
+				</select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label asp-for="Nationality" class="col-sm-2 col-form-label"></label>
+			<div class="col-sm-10">
+
+				<select asp-for="Nationality" class="form-control" />
+				</select>
+			</div>
+		</div>
+
 
 
 		@if (Model.ActorID.HasValue)
