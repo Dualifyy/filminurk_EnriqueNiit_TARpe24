@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Filminurk.Data\Filminurk.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\lib\defaultassets\" />
-  </ItemGroup>
-
 </Project>
