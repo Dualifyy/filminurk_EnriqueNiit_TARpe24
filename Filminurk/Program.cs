@@ -13,7 +13,18 @@ builder.Services.AddScoped<IUserCommentsServices, UserCommentsServices>();
 builder.Services.AddScoped<IEmailsServices, EmailsServices>();
 builder.Services.AddDbContext<FilminurkTARpe24Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString
     ("DefaultConnection")));
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+    options.Password.RequiredLength = 8;
 
+    options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+    options.Lockout.MaxFailedAccessAttempts = 3;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    //options.User.RequireUniqueEmail = true;
+})
+    .AddEntityFrameworkStores<FilminurkTARpe24Context>()
+    .AddDefault
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
