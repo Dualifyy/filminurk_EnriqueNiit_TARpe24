@@ -1,6 +1,7 @@
 using Filminurk.ApplicationServices.Services;
 using Filminurk.Core.ServiceInterface;
 using Filminurk.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,21 +11,23 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IMovieServices, MovieServices>();
 builder.Services.AddScoped<IFilesServices, FilesServices>();
 builder.Services.AddScoped<IUserCommentsServices, UserCommentsServices>();
-builder.Services.AddScoped<IEmailsServices, EmailsServices>();
+builder.Services.AddScoped<IWeatherForecastServices, WeatherForecastServices>();
+//builder.Services.AddScoped<IAccountsServices, AccountsServices>();
 builder.Services.AddDbContext<FilminurkTARpe24Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString
     ("DefaultConnection")));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = true;
-    options.Password.RequiredLength = 8;
+//builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+//{
+//    options.SignIn.RequireConfirmedAccount = true;
+//    options.Password.RequiredLength = 8;
 
-    options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
-    options.Lockout.MaxFailedAccessAttempts = 3;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    //options.User.RequireUniqueEmail = true;
-})
-    .AddEntityFrameworkStores<FilminurkTARpe24Context>()
-    .AddDefault
+//    options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+//    options.Lockout.MaxFailedAccessAttempts = 3;
+//    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+//    //options.User.RequireUniqueEmail = true;
+//});
+    //.AddEntityFrameworkStores<FilminurkTARpe24Context>()
+    //.AddDefaultTokenProviders()
+    //.AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("CustomEmailConfirmation")
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
