@@ -26,9 +26,13 @@ namespace Filminurk.ApplicationServices.Services
                     );
                 var response =  httpClient.GetAsync($"?apikey={apikey}&q={dto.CityName}").GetAwaiter().GetResult(); // get awaiter get result remove await
                 var jsonResponse = await response.Content.ReadAsStringAsync();
-                List<AccuCityCodeRootDTO> codeData = JsonSerializer.Deserialize<List<AccuCityCodeRootDTO>>(jsonResponse);
+                using (JsonDocument doc = JsonDocument.Parse(jsonResponse))
+                {
+                    JsonElement root = doc.RootElement;
+                    dto.CityCode = root[0].GetProperty("Key").ToString();
+                }
 
-                dto.CityCode = codeData[0].Key;
+                    
             }
 
 
