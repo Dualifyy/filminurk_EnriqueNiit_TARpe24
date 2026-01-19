@@ -29,7 +29,7 @@ namespace Filminurk.ApplicationServices.Services
             actor.NickName = dto.NickName;
             actor.MoviesActedFor = dto.MoviesActedFor;
             actor.MostPopularMovie = dto.MostPopularMovie;
-            actor.Age = dto.Age;
+            actor.Age = (int)dto.Age;
             actor.Nationality = dto.Nationality;
             actor.EntryCreatedAt = DateTime.Now;
             actor.EntryModifiedAt = DateTime.Now;
@@ -65,7 +65,7 @@ namespace Filminurk.ApplicationServices.Services
             actor.NickName = dto.NickName;
             actor.MoviesActedFor = dto.MoviesActedFor;
             actor.MostPopularMovie = dto.MostPopularMovie;
-            actor.Age = dto.Age;
+            actor.Age = (int)dto.Age;
             actor.Nationality = dto.Nationality;
             actor.EntryCreatedAt = dto.EntryCreatedAt;
             actor.EntryModifiedAt = DateTime.Now;

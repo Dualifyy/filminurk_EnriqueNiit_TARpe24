@@ -63,7 +63,7 @@ namespace Filminurk.Controllers
             {
                 var dto = new ActorsDTO()
                 {
-                    ActorID = vm.ActorID,
+                    ActorID = Guid.NewGuid(),
                     FirstName = vm.FirstName,
                     LastName = vm.LastName,
                     NickName = vm.NickName,

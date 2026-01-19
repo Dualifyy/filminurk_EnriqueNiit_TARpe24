@@ -15,9 +15,9 @@ namespace Filminurk.Models.Actors
         // public Guid PortraitID { get; set; }
 
         // 3 õpilase andmetüübi
-        public string MostPopularMovie { get; set; }
+        public string? MostPopularMovie { get; set; }
         public int Age { get; set; }
-        public string Nationality { get; set; }
+        public string? Nationality { get; set; }
         // andmebaasi jaoks
         public DateTime? EntryCreatedAt { get; set; }
         public DateTime? EntryModifiedAt { get; set; }
