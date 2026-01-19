@@ -5,7 +5,7 @@
 
 <div>
 	<a asp-action="CreateUpdate" asp-controller="Movies" type="submit" class="btn btn-primary">
-
+		Loo uus film
 	</a>
 </div>
 <div class="h1">
@@ -18,8 +18,10 @@
 				<th scope="col">#</th>
 				<th scope="col">Filmi pealkiri</th>
 				<th scope="col">Väljalaskeaeg</th>
+				<th scope="col">Režissöör</th>
 				<th scope="col">Hinnang</th>
 				<th scope="col">Vaataja hinnang</th>
+				<th scope="col">Hind</th>
 				<th scope="col">Filmi pikkus</th>
 			</tr>
 		</thead>
@@ -30,9 +32,11 @@
 					<td>@rowNumber</td>
 					<td>@movie.Title</td>
 					<td>@movie.FirstPublished</td>
+					<td>@movie.Director</td>
 					<td>@movie.CurrentRating</td>
 					<td>@movie.UserRating</td>
-					<td>@movie.MovieLength</td>
+					<td>@movie.BuyPrice €</td>
+					<td>@movie.MovieLength min</td>
 					<td>
 						<a asp-action="Delete" asp-controller="Movies" asp-route-id="@movie.ID" class="btn btn-outline-danger">Delete</a>
 					</td>

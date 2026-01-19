@@ -1,4 +1,5 @@
-﻿namespace Filminurk.Models.Movies
+﻿using Filminurk.Core.Domain;
+namespace Filminurk.Models.Movies
 {
     public class MoviesCreateUpdateViewModel
     {
@@ -12,8 +13,8 @@
         //public List<UserComment>? Reviews { get; set; }
 
         /* Kaasasolevate piltide andmeomadused*/
-        public List<IFormFile> Files { get; set; }
-        public List<ImageViewModel> Images { get; set; } = new List<ImageViewModel>();
+        public List<IFormFile>? Files { get; set; }
+        public List<ImageViewModel>? Images { get; set; } = new List<ImageViewModel>();
 
         /*kolm omal valikul andmetüüpi yo*/
 

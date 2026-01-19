@@ -31,14 +31,16 @@ namespace Filminurk.Controllers
                 ID = x.ID,
                 Title = x.Title,
                 FirstPublished = x.FirstPublished,
+                Director = x.Director,
                 CurrentRating = x.CurrentRating,
                 UserRating = x.UserRating,
+                BuyPrice = x.BuyPrice,
                 MovieLength = x.MovieLength,
             });
             return View(result);
         }
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult CreateUpdate()
         {
             MoviesCreateUpdateViewModel result = new();
             return View("CreateUpdate", result);
