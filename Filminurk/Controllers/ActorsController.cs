@@ -33,6 +33,10 @@ namespace Filminurk.Controllers
                 ActorID = x.ActorID,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
+                MostPopularMovie = x.MostPopularMovie,
+                MoviesActedFor = x.MoviesActedFor,
+                Age = x.Age,
+                Nationality = x.Nationality
             });
 
             return View(result);
