@@ -1,4 +1,5 @@
-﻿using Filminurk.Core.ServiceInterface;
+﻿using Filminurk.Core.Domain;
+using Filminurk.Core.ServiceInterface;
 using Filminurk.Data;
 using Filminurk.Models.Accounts;
 using Microsoft.AspNetCore.Authorization;
