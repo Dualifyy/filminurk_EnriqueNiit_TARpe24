@@ -28,7 +28,7 @@ namespace Filminurk.Controllers
                 EmailContent = vm.EmailContent
             };
             _emailsServices.SendEmail(dto);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }
