@@ -110,5 +110,186 @@ namespace Filminurk.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            if (token == null || user.Email == null)
+            {
+                ModelState.AddModelError("", "Invalid password reset token.");
+            }
+            var model = new ResetPasswordViewModel
+            {
+                Token = token,
+                Email = user.Email
+            };
+            return View(model);
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid) // kontrollitakse kas modelstate on õige, ehk kõik andmed on olemas
+            { // kui on, siis teostatakse ülejäänud meetodi sisu
+                var user = await _userManager.FindByEmailAsync(model.Email); //otsitakse kasutaja emaili abil üles
+                if (user != null) //ülejäänud tegevus toimub siis kui kasutaja EI ole tühi, ehk leitakse üles
+                {
+                    var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+                    //oodatakse kuni usermanager resetib kasutaja parooli
+                    if (result.Succeeded) //kui resettimine on edukas, siis:
+                    {
+                        if (await _userManager.IsLockedOutAsync(user)) //kontrollitakse kas seesama kasutaja on ennast katsetega lockouti läinud
+                        {
+                            await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+                            //ja võetakse lockout maha
+                        }
+                        await _signInManager.SignOutAsync(); //signinmanager logib kasutaja välja
+                        await _userManager.DeleteAsync(user); //useremanageris kustutatakse kasutaja
+                        return RedirectToAction("ResetPasswordConfirmation", "Accounts");
+                        //tagastatakse password reset kinnitusvaatesse
+                    }
+                    foreach (var error in result.Errors)  //aga kui resettimine ei olnud edukas, logitakse kõik errorid välja
+                    {
+                        ModelState.AddModelError("", error.Description);
+                        //ja lisatakse modelstatele juurde
+                    }
+                    return RedirectToAction("ResetPasswordConfirmation", "Accounts");
+                    //ning tagastatakse password reset kinnitusvaatesse
+                }
+                await _userManager.DeleteAsync(user); //kui kasutaja ON tühi, ehk ei leita üles, taGASTATAKSE kasutaja password reset kinnitusvaatesse
+                return RedirectToAction("ResetPasswordConfirmation", "Accounts");
+            }
+            return RedirectToAction("ResetPasswordConfirmation", "Accounts");
+            //kui modelstate ei ole õige, mingi väli on puudu, siis tagastatakse kasutaja password reset kinnitusvaatesse
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult AccountCreated()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser()
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    ProfileType = model.ProfileType,
+                    DisplayName = model.DisplayName,
+                    AvatarImageID = Guid.NewGuid().ToString(),
+                };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    var confirmationLink = Url.Action("ConfirmEmail", "Accounts", new { userID = user.Id, token = token }, Request.Scheme);
+                    //HOMEWORK TASK: koosta email kasutajalt pärineva aadressile saatmiseks, kasutaja saab oma postkastist kätte emaili
+                    //kinnituslingiga, mille jaoks kasutatakse tokenit. siin tuleb välja kutsuda vastav, uus, emaili saatmise meetod, mis saadab
+                    //õige sisuga kirja
+                }
+                //
+
+                return RedirectToAction("Index", "Home");
+            }
+            return BadRequest();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View("Login");
+            }
+            return BadRequest();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string? returnURL)
+        {
+            LoginViewModel vm = new()
+            {
+                ReturnUrl = returnURL,
+            };
+            return View(vm);
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnURL)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null && !user.EmailConfirmed && (await _userManager.CheckPasswordAsync(user, model.Password)))
+                {
+                    ModelState.AddModelError("", "Sinu email ei ole kinnitatud, palun vaata spämmikausta");
+                    return View(model);
+                }
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
+                if (result.Succeeded)
+                {
+                    if (!string.IsNullOrEmpty(returnURL) && Url.IsLocalUrl(returnURL))
+                    {
+                        return Redirect(returnURL);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                if (result.Succeeded == false)
+                {
+                    ModelState.AddModelError("", "Kasutajanimi või parool on vale.");
+                }
+                if (result.IsNotAllowed)
+                {
+                    ModelState.AddModelError("", "Sisselogimine ebaõnnestus, kasutaja keelatud");
+                }
+                if (result.IsLockedOut)
+
+                {
+                    return View("AccountLocked");
+                }
+                ModelState.AddModelError("", "Sisselogimine ebaõnnestus, kontakteeru administraatoriga");
+            }
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
