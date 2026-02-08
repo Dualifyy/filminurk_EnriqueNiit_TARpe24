@@ -1,4 +1,5 @@
 ﻿using Filminurk.Core.Domain;
+using Filminurk.Core.Dto;
 using Filminurk.Core.ServiceInterface;
 using Filminurk.Data;
 using Filminurk.Models.Accounts;
@@ -18,12 +19,14 @@ namespace Filminurk.Controllers
         public AccountsController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            FilminurkTARpe24Context context
+            FilminurkTARpe24Context context,
+            IEmailsServices emailsServices
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _emailsServices = emailsServices;
         }
         [HttpGet]
         public async Task<IActionResult> AddPassword()
@@ -43,7 +46,7 @@ namespace Filminurk.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 var result = await _userManager.AddPasswordAsync(user, model.NewPassword);
-                if (result.Succeeded)
+                if (!result.Succeeded)
                 {
                     foreach (var error in result.Errors)
                     {
@@ -58,6 +61,8 @@ namespace Filminurk.Controllers
             }
             return View(model);
         }
+        [HttpPost]
+
         [HttpGet]
         public IActionResult ChangePassword()
         {
@@ -132,38 +137,38 @@ namespace Filminurk.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (ModelState.IsValid) // kontrollitakse kas modelstate on õige, ehk kõik andmed on olemas
-            { // kui on, siis teostatakse ülejäänud meetodi sisu
-                var user = await _userManager.FindByEmailAsync(model.Email); //otsitakse kasutaja emaili abil üles
-                if (user != null) //ülejäänud tegevus toimub siis kui kasutaja EI ole tühi, ehk leitakse üles
+            if (ModelState.IsValid) 
+            { 
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
                 {
                     var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
-                    //oodatakse kuni usermanager resetib kasutaja parooli
-                    if (result.Succeeded) //kui resettimine on edukas, siis:
+                   
+                    if (result.Succeeded) 
                     {
-                        if (await _userManager.IsLockedOutAsync(user)) //kontrollitakse kas seesama kasutaja on ennast katsetega lockouti läinud
+                        if (await _userManager.IsLockedOutAsync(user))
                         {
                             await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
-                            //ja võetakse lockout maha
+                            
                         }
-                        await _signInManager.SignOutAsync(); //signinmanager logib kasutaja välja
-                        await _userManager.DeleteAsync(user); //useremanageris kustutatakse kasutaja
+                        await _signInManager.SignOutAsync();
+                        await _userManager.DeleteAsync(user); 
                         return RedirectToAction("ResetPasswordConfirmation", "Accounts");
-                        //tagastatakse password reset kinnitusvaatesse
+                        
                     }
-                    foreach (var error in result.Errors)  //aga kui resettimine ei olnud edukas, logitakse kõik errorid välja
+                    foreach (var error in result.Errors) 
                     {
                         ModelState.AddModelError("", error.Description);
-                        //ja lisatakse modelstatele juurde
+                       
                     }
                     return RedirectToAction("ResetPasswordConfirmation", "Accounts");
-                    //ning tagastatakse password reset kinnitusvaatesse
+                  
                 }
-                await _userManager.DeleteAsync(user); //kui kasutaja ON tühi, ehk ei leita üles, taGASTATAKSE kasutaja password reset kinnitusvaatesse
+                await _userManager.DeleteAsync(user); 
                 return RedirectToAction("ResetPasswordConfirmation", "Accounts");
             }
             return RedirectToAction("ResetPasswordConfirmation", "Accounts");
-            //kui modelstate ei ole õige, mingi väli on puudu, siis tagastatakse kasutaja password reset kinnitusvaatesse
+           
         }
 
         [HttpGet]
@@ -201,14 +206,16 @@ namespace Filminurk.Controllers
                 if (result.Succeeded)
                 {
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
                     var confirmationLink = Url.Action("ConfirmEmail", "Accounts", new { userID = user.Id, token = token }, Request.Scheme);
-                    //HOMEWORK TASK: koosta email kasutajalt pärineva aadressile saatmiseks, kasutaja saab oma postkastist kätte emaili
-                    //kinnituslingiga, mille jaoks kasutatakse tokenit. siin tuleb välja kutsuda vastav, uus, emaili saatmise meetod, mis saadab
-                    //õige sisuga kirja
+                    var dto = new EmailDTO()
+                    {
+                        SendToThisAddress = model.Email,
+                        EmailSubject = "Email Confirmation",
+                        EmailContent = "Please click on this Link to confirm your account - " + confirmationLink
+                    };
+                    _emailsServices.SendEmail(dto);
+                    return RedirectToAction("Index", "Home");
                 }
-                //
-
                 return RedirectToAction("Index", "Home");
             }
             return BadRequest();
@@ -230,7 +237,7 @@ namespace Filminurk.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
-                return View("Login");
+                return View("Login", "Accounts");
             }
             return BadRequest();
         }
