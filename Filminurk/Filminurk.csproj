@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Filminurk.Data\Filminurk.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\SignalR\" />
-  </ItemGroup>
-
 </Project>
