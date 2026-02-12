@@ -13,9 +13,15 @@ namespace Filminurk.Controllers
             _userManager = userManager; 
             _signInManager = signInManager; 
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            var vm = new ChatViewModel { };
+
+            vm.DisplayName = user.DisplayName;
+
+
+            return View("Index" ,vm);
         }
     }
 }
