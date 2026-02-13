@@ -1,4 +1,6 @@
-﻿namespace Filminurk.Models.Movies
+﻿using System;
+
+namespace Filminurk.Models.Movies
 {
     public class MoviesIndexViewModel
     {
@@ -14,5 +16,12 @@
         public double? UserRating { get; set; }
         public string? BuyPrice { get; set; }
         public int? MovieLength { get; set; }
+
+        // OMDb-related / informational fields
+        public string? Year { get; set; }
+        public string? Genre { get; set; }
+        public string? Actors { get; set; }
+        public string? Plot { get; set; }
+        public string? PosterUrl { get; set; }
     }
 }

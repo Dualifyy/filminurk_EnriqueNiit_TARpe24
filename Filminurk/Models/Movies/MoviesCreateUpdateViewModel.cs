@@ -23,5 +23,7 @@ namespace Filminurk.Models.Movies
         public int? MovieLength { get; set; }
         public DateTime? EntryCreatedAt { get; set; }
         public DateTime? EntryModifiedAt { get; set; }
+
+        public string? PosterUrl { get; set; }
     }
 }

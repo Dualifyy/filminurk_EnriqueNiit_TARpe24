@@ -1,10 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Filminurk.Data;
 using Filminurk.Models.Movies;
+using Filminurk.Models.OMDbAPI;
 using Filminurk.Core.Dto;
 using Filminurk.Core.ServiceInterface;
 using Microsoft.EntityFrameworkCore;
 using Filminurk.Core.Domain;
+using System.Linq;
+using System.Text.Json;
+using Filminurk.Core.Dto.OMDbAPIDTOs;
+using System.Text.RegularExpressions;
 
 namespace Filminurk.Controllers
 {
@@ -36,6 +41,12 @@ namespace Filminurk.Controllers
                 UserRating = x.UserRating,
                 BuyPrice = x.BuyPrice,
                 MovieLength = x.MovieLength,
+                Year = x.FirstPublished != null ? x.FirstPublished.Year.ToString() : null,
+                Plot = x.Description,
+                PosterUrl = _context.FilesToAPI
+                    .Where(f => f.MovieID == x.ID && (f.IsPoster == true || f.IsPoster == null))
+                    .Select(f => f.ExistingFilePath)
+                    .FirstOrDefault()
             });
             return View(result);
         }
@@ -43,16 +54,71 @@ namespace Filminurk.Controllers
         public IActionResult CreateUpdate()
         {
             MoviesCreateUpdateViewModel result = new();
+
+            if (TempData.ContainsKey("OMDbMovie"))
+            {
+                var json = TempData["OMDbMovie"] as string;
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    try
+                    {
+                        var dto = JsonSerializer.Deserialize<OMDbAPIMovieSearchRootDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        if (dto != null)
+                        {
+                            result.Title = dto.Title;
+                            result.Description = dto.Plot;
+                            if (!string.IsNullOrWhiteSpace(dto.Released) && DateTime.TryParse(dto.Released, out var dt))
+                            {
+                                result.FirstPublished = DateOnly.FromDateTime(dt);
+                            }
+                            else if (!string.IsNullOrWhiteSpace(dto.Year) && int.TryParse(dto.Year.Split('–').FirstOrDefault(), out var y))
+                            {
+                                result.FirstPublished = new DateOnly(y, 1, 1);
+                            }
+
+                            result.Director = dto.Director;
+                            if (!string.IsNullOrWhiteSpace(dto.Actors))
+                            {
+                                result.Actors = dto.Actors.Split(',').Select(a => a.Trim()).ToList();
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(dto.Runtime))
+                            {
+                                var m = Regex.Match(dto.Runtime, @"\d+");
+                                if (m.Success && int.TryParse(m.Value, out var minutes))
+                                {
+                                    result.MovieLength = minutes;
+                                }
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(dto.Poster))
+                            {
+
+                                result.PosterUrl = dto.Poster;
+
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // ignore malformed TempData
+                    }
+                }
+            }
+
             return View("CreateUpdate", result);
         }
         [HttpPost]
         public async Task<IActionResult> Create(MoviesCreateUpdateViewModel vm)
         {
-            if (ModelState.IsValid)
-            { 
-            var dto = new MoviesDTO()
+            if (!ModelState.IsValid)
             {
-                ID = vm.ID,
+                return View("CreateUpdate", vm);
+            }
+
+            var dto = new MoviesDTO
+            {
+                ID = Guid.NewGuid(),
                 Title = vm.Title,
                 Description = vm.Description,
                 FirstPublished = vm.FirstPublished,
@@ -62,27 +128,33 @@ namespace Filminurk.Controllers
                 UserRating = vm.UserRating,
                 BuyPrice = vm.BuyPrice,
                 MovieLength = vm.MovieLength,
-                EntryCreatedAt = vm.EntryCreatedAt,
-                EntryModifiedAt = vm.EntryModifiedAt,
-                Files = vm.Files,
-                FileToAPIDTOs = vm.Images
-                .Select(x => new FileToAPIDTO
-                {
-                    ImageID = x.ImageID,
-                    FilePath = x.FilePath,
-                    MovieID = x.MovieID,
-                    IsPoster = x.IsPoster,
-                }).ToArray()
+                EntryCreatedAt = DateTime.UtcNow,
+                EntryModifiedAt = DateTime.UtcNow,
             };
+
             var result = await _movieServices.Create(dto);
             if (result == null)
             {
                 return NotFound();
             }
+
+            if (!string.IsNullOrWhiteSpace(vm.PosterUrl))
+            {
+                var poster = new FileToAPI
+                {
+                    ImageID = Guid.NewGuid(),
+                    MovieID = result.ID,
+                    ExistingFilePath = vm.PosterUrl,
+                    IsPoster = true
+                };
+
+                await _context.FilesToAPI.AddAsync(poster);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction(nameof(Index));
         }
-            return RedirectToAction(nameof(Index));
-        }
+
         [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
@@ -242,6 +314,12 @@ namespace Filminurk.Controllers
                     FilePath = y.ExistingFilePath,
                 }
                 ).ToArrayAsync();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Import()
+        {
+            return View();
         }
 
     }
